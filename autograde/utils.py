@@ -51,3 +51,15 @@ def run_subprocess(cmd, test_input=None, timeout=None):
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     return communicate(p, test_input, timeout)
+
+
+# Wrap a given message for cleaner output
+def wrap(out, err, name):
+    return wrap_message(out, name + ' output') + wrap_message(err, name + ' output')
+
+
+def wrap_message(msg, name):
+    if msg and len(msg.strip()) > 0:
+        return '\n=== begin %s ===\n%s\n=== end %s ===\n\n' % \
+               (name, msg.strip(), name)
+    return ''
