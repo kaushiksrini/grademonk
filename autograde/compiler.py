@@ -16,7 +16,7 @@ class TestCompileFiles(object):
             if not os.path.exists(file + '.c'):
                 msg += 'FAIL -- "%s.c" does not exist\n' % file
                 continue
-            if os.path.exists(m):
+            if os.path.exists(file):
                 msg += 'FAIL -- "%s" binary already exists\n' % file
                 continue
 
@@ -26,7 +26,7 @@ class TestCompileFiles(object):
             if return_code != 0:
                 msg += ('FAIL -- "%s.c" failed to compile; gcc returned %d\n\n'
                         % (file, return_code)) + wrap(out, err, file)
-            elif len(err.strip()) > 0:
+            elif err and len(err.strip()) > 0:
                 msg += ('SUSPICIOUS -- "%s.c" compiled, but with warnings' %
                         file) + wrap(out, err, file)
 

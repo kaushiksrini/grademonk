@@ -44,9 +44,10 @@ class TestGitlogFormat(TestGitlog):
 
 
 class TestGitlogContributions(TestGitlog):
-    def __init__(self, name='Gitlog - Equal Contribution', visibility='hidden', max_score=0.01, minimum_commits=8):
+    def __init__(self, name='Gitlog - Equal Contribution', visibility='hidden', max_score=0.01, minimum_commits=8, group_size=1):
         TestGitlog.__init__(self, name=name, visibility=visibility,
                             max_score=max_score, minimum_commits=minimum_commits)
+        self.group_size = group_size
 
     def check_gitlog(self):
         import re

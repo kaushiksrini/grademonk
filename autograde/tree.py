@@ -16,5 +16,5 @@ class TreeSubmission(object):
 
     def run(self):
         out, _, _, _ = run_subprocess(self.tree_cmd())
-        msg = 'Extracted submission files:\n' + out
+        msg = 'Extracted submission files:\n' + out.decode()
         return make_test_obj(self.max_score, self.name, self.max_score, msg, visibility=self.visibility)
