@@ -4,6 +4,7 @@ from autograde.compiler import TestCompileFiles, TestCleanBinaries
 from autograde.gitlog import TestGitlogFormat
 from autograde.files import TestRequiredFiles, TestUnexpectedFiles
 from autograde.tests import TestGroup, TestRunner, ArgumentArray
+from autograde.controller import DiffController
 
 CONFIG = {
     "settings": {
@@ -18,9 +19,14 @@ CONFIG = {
             TestRequiredFiles(['one.c']),
             TestCleanBinaries(['one']),
             TestCompileFiles(targets=['one']),
-            TestGroup("Equality", [TestRunner(
-                'one', 'Check Equality', ArgumentArray(), 'diff'
-            )])
+            TestGroup("Equality", [
+                TestRunner(
+                    target='one',
+                    test_name='Check Equality',
+                    arguments=ArgumentArray(),
+                    tester=DiffController('Testing 123\n')
+                )
+            ])
         ]
     }
 

@@ -1,4 +1,5 @@
 from .utils import run_subprocess
+import os
 
 
 class TestGroup(object):
@@ -15,12 +16,13 @@ class TestGroup(object):
 
 
 class TestRunner(object):
-    def __init__(self, target, test_name, arguments, tester, return_value=0):
+    def __init__(self, target, test_name, arguments, tester, return_value=0, timeout=300):
         self.target = target
         self.test_name = test_name
         self.arguments = arguments
         self.tester = tester
         self.return_value = self.return_value
+        self.timeout = timeout
 
     def run(self):
         # get the argument
@@ -32,16 +34,19 @@ class TestRunner(object):
         # Unit Test
         # check if the return value is
 
+        if not os.path.exists(self.target):
+            return 'FAIL -- executable "%s" did not compile or was not found\n' % self.target
+
         msg = ''
         cmd = './%s %s' % (self.target, self.arguments.getArg())
-        out, err, return_code, isKilled = run_subprocess(cmd)
+        out, err, return_code, isKilled = run_subprocess(
+            cmd, timeout=self.timeout)
+
+        if isKilled:
+            return 'FAIL -- Test \" %s \" took longer than %d seconds to run.\n' % (self.test_name, self.timeout)
 
         #
-        # msg += self.tester.generate_msg(out, err, return_code)
-
-        if return_code != self.return_value:
-            msg += 'FAIL (RETURN CODE) -- "%s" compiled successfully but returned [%d] when run instead of [%d]\n' % (
-                self.target, return_code, self.return_value)
+        msg += self.tester.generate_msg(target, out, err, return_code)
 
         if len(msg) > 0:
             return msg
@@ -64,8 +69,3 @@ class Argument(object):
     def __init__(self, arg, arg_type):
         self.arg = arg
         self.arg_type = arg_type
-
-
-class DiffTester(object):
-    def __init__(self):
-        self.
