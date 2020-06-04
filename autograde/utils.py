@@ -49,8 +49,13 @@ def communicate(p, test_input=None, timeout=None):
 def run_subprocess(cmd, test_input=None, timeout=None):
     p = subprocess.Popen(cmd, shell=True, preexec_fn=os.setsid,
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    out, err, return_code, isKilled = communicate(p, test_input, timeout)
 
-    return communicate(p, test_input, timeout)
+    # strip the values
+    out = out.strip() if out else out
+    err = err.strip() if err else err
+
+    return out, err, return_code, isKilled
 
 
 # Wrap a given message for cleaner output
