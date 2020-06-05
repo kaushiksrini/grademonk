@@ -4,13 +4,14 @@ from autograde.compiler import TestCompileFiles, TestCleanBinaries
 from autograde.gitlog import TestGitlogFormat
 from autograde.files import TestRequiredFiles, TestUnexpectedFiles
 from autograde.tests import TestGroup, TestRunner, ArgumentArray
-from autograde.controller import DiffController
+from autograde.controller import DiffTester
 
 CONFIG = {
     "settings": {
         "autograder": True,
         "version": "0.1.0",
-        "locationMount": "submission/"
+        "locationMount": "submission/",
+        "foldersReq": ["input", "output", "expected"]
     },
     "test": {
         "tests": [
@@ -24,7 +25,13 @@ CONFIG = {
                     target='one',
                     test_name='Check Equality',
                     arguments=ArgumentArray(),
-                    tester=DiffController('Testing 123\n')
+                    tester=DiffTester('Testing 123')
+                ),
+                TestRunner(
+                    target='one',
+                    test_name='Check Equality',
+                    arguments=ArgumentArray(),
+                    tester=DiffTester('Testing 1234')
                 )
             ])
         ]
