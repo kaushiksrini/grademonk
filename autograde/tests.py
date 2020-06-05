@@ -1,4 +1,4 @@
-from .utils import run_subprocess
+from .utils import run_subprocess, make_test_obj
 import os
 
 
@@ -11,8 +11,13 @@ class TestGroup(object):
         self.valgrind = valgrind
 
     def run(self):
+        result = []
         for test in self.tests:
             msg = test.run()
+            score = 0 if msg.startswith('FAIL') else self.max_score
+            result.extend(make_test_obj(score, self.group_name,
+                                        self.max_score, msg, self.visibility))
+        return result
 
 
 class TestRunner(object):
@@ -21,7 +26,7 @@ class TestRunner(object):
         self.test_name = test_name
         self.arguments = arguments
         self.tester = tester
-        self.return_value = self.return_value
+        self.return_value = return_value
         self.timeout = timeout
 
     def run(self):
@@ -45,8 +50,7 @@ class TestRunner(object):
         if isKilled:
             return 'FAIL -- Test \" %s \" took longer than %d seconds to run.\n' % (self.test_name, self.timeout)
 
-        #
-        msg += self.tester.generate_msg(target, out, err, return_code)
+        msg += self.tester.generate_msg(self.target, out, err, return_code)
 
         if len(msg) > 0:
             return msg
@@ -55,14 +59,16 @@ class TestRunner(object):
 
 
 class ArgumentArray(object):
-    def __init__(self, text='', arg_type='', autograder_mount='', local_mount=''):
-        self.text = text
-        self.arg_type = arg_type
-        self.autograder_mount = autograder_mount
-        self.local_mount = local_mount
+    def __init__(self, io=False, cla='', file=''):
+        self.cla = cla
+        self.io = io
+        self.file = file
+
+    def read_label(self):
+        pass
 
     def getArg(self):
-        return self.text
+        return self.cla
 
 
 class Argument(object):

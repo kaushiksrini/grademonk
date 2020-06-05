@@ -20,7 +20,7 @@ class DiffTester(object):
 
         if isinstance(self.text, str):
             if out != self.text:
-                msg += 'FAIL -- Test ran but produced incorrect output\n' + wrap_message(out, target + ' output') + \
+                msg += 'FAIL -- Test ran but produced incorrect output\n' + wrap_message(self.text, target + ' expected') + wrap_message(out, target + ' output') + \
                     wrap_message(err, target + ' error')
 
         return msg

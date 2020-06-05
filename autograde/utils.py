@@ -5,14 +5,14 @@ import signal
 
 
 def make_test_obj(score, name, max_score, output, visibility, tags=''):
-    return {
+    return [{
         "score": score,
         "name": name,
         "max_score": max_score,
         "output": output,
         "tags": tags,
         "visibility": visibility
-    }
+    }]
 
 # Subprocess communicate with a timeout
 # Returns the output, error, and the return code
@@ -52,9 +52,8 @@ def run_subprocess(cmd, test_input=None, timeout=None):
     out, err, return_code, isKilled = communicate(p, test_input, timeout)
 
     # strip the values
-    out = out.strip() if out else out
-    err = err.strip() if err else err
-
+    out = out.strip().decode('utf-8') if out else out
+    err = err.strip().decode('utf-8') if err else err
     return out, err, return_code, isKilled
 
 
