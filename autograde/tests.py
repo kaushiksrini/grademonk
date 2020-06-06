@@ -1,4 +1,4 @@
-from .utils import run_subprocess, make_test_obj
+from .utils import run_subprocess, make_test_obj, get_file_path
 import os
 
 
@@ -43,35 +43,19 @@ class TestRunner(object):
             return 'FAIL -- executable "%s" did not compile or was not found\n' % self.target
 
         msg = ''
+        print(self.arguments.getArg())
         cmd = './%s %s' % (self.target, self.arguments.getArg())
+
         out, err, return_code, isKilled = run_subprocess(
             cmd, timeout=self.timeout)
 
         if isKilled:
             return 'FAIL -- Test \" %s \" took longer than %d seconds to run.\n' % (self.test_name, self.timeout)
 
-        msg += self.tester.generate_msg(self.target, out, err, return_code)
+        msg += self.tester.generate_msg(self.test_name,
+                                        self.target, out, err, return_code)
 
         if len(msg) > 0:
             return msg
 
         return 'PASS - Test \"%s\" passed successfully' % (self.test_name)
-
-
-class ArgumentArray(object):
-    def __init__(self, io=False, cla='', file=''):
-        self.cla = cla
-        self.io = io
-        self.file = file
-
-    def read_label(self):
-        pass
-
-    def getArg(self):
-        return self.cla
-
-
-class Argument(object):
-    def __init__(self, arg, arg_type):
-        self.arg = arg
-        self.arg_type = arg_type

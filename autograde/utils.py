@@ -67,3 +67,10 @@ def wrap_message(msg, name):
         return '\n=== begin %s ===\n%s\n=== end %s ===\n\n' % \
                (name, msg.strip(), name)
     return ''
+
+
+def get_file_path(filepath, file):
+    # if not AUTOGRADER:
+    return '../%s/%s' % (filepath, file)
+    # else:
+    # return '/autograder/source/%s/%s.txt' % (filepath, file)

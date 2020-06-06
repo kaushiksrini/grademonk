@@ -9,8 +9,8 @@ class TestMakeCommand(object):
         self.visibility = visibility
         self.max_score = max_score
 
-    def run(self):
-        out, err, return_code, _ = run_subprocess('make clean')
+    def run_cmd(self, cmd):
+        out, err, return_code, _ = run_subprocess(cmd)
 
         if return_code != 0:
             msg = ('FAIL -- "make %s" failed; make returned %d\n\n'
@@ -27,6 +27,18 @@ class TestMakeCommand(object):
 
         msg = 'PASS -- "make %s" succeeded without warnings or errors\n Output:\n %s' % (
             self.target, out)
+
+        return msg
+
+    def run(self):
+        msg = ''
+
+        if isinstance(self.target, str):
+            msg = self.run_cmd(self.target)
+        elif isinstance(self.target, list):
+            for target in self.target:
+                cmd = 'make %s' % target
+                msg += self.run_cmd(cmd)
 
         return make_test_obj(self.max_score, self.name, self.max_score, msg, self.visibility)
 
