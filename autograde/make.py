@@ -34,7 +34,8 @@ class TestMakeCommand(object):
         msg = ''
 
         if isinstance(self.target, str):
-            msg = self.run_cmd(self.target)
+            cmd = 'make %s' % self.target
+            msg = self.run_cmd(cmd)
         elif isinstance(self.target, list):
             for target in self.target:
                 cmd = 'make %s' % target
@@ -44,9 +45,9 @@ class TestMakeCommand(object):
 
 
 class TestMakeClean(TestMakeCommand):
-    def __init__(self, target, name='Make Clean', visibility='visible', max_score=0.01):
+    def __init__(self, target='clean', name='Make Clean', visibility='visible', max_score=0.01):
         TestMakeCommand.__init__(
-            self, 'clean', name=name, visibility=visibility, max_score=max_score)
+            self, target, name=name, visibility=visibility, max_score=max_score)
 
 
 class TestMakeFiles(TestMakeCommand):
