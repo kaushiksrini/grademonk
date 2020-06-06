@@ -22,6 +22,7 @@ class Autograder(object):
     def create_folders(self):
         folders = self.CONFIG["settings"]["foldersReq"]
 
+        # create the folders
         for folder in folders:
             if not os.path.exists(folder):
                 os.mkdir(folder)
@@ -31,11 +32,13 @@ class Autograder(object):
 
         self.create_folders()
 
+        # mount the autograder
         if self.autograder:
             os.chdir('/autograder/submission')
         else:
             os.chdir(self.CONFIG["settings"]["locationMount"])
 
+        # run each class test
         classes = self.CONFIG["test"]["tests"]
         for cl in classes:
             val = cl.run()
