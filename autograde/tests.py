@@ -10,14 +10,30 @@ class TestGroup(object):
         self.max_score = max_score
         self.valgrind = valgrind
 
-    def run(self):
+    def run(self, group=False):
+
+        failed_msg = ""
+        secondary_msg = ""
         result = []
+
         for test in self.tests:
             msg = test.run()
-            score = 0 if msg.startswith('FAIL') else self.max_score
-            result.extend(make_test_obj(score, self.group_name,
-                                        self.max_score, msg, self.visibility))
-        return result
+            if not group:
+                score = 0 if msg.startswith('FAIL') else self.max_score
+                result.extend(make_test_obj(score, self.group_name,
+                                            self.max_score, msg, self.visibility))
+            else:
+                if msg.startswith('FAIL'):
+                    failed_msg += msg
+                else:
+                    secondary_msg += msg
+
+        if not group:
+            return result
+        else:
+            full_msg = failed_msg + secondary_msg
+            score = 0 if len(failed_msg) > 0 else self.max_score
+            return make_test_obj(score, self.group_name, self.max_score, full_msg, self.visibility)
 
 
 class TestRunner(object):
@@ -43,7 +59,6 @@ class TestRunner(object):
             return 'FAIL -- executable "%s" did not compile or was not found\n' % self.target
 
         msg = ''
-        print(self.arguments.getArg())
         cmd = './%s %s' % (self.target, self.arguments.getArg())
 
         out, err, return_code, isKilled = run_subprocess(

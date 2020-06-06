@@ -40,8 +40,10 @@ class Autograder(object):
 
         # run each class test
         classes = self.CONFIG["test"]["tests"]
+        groupTests = self.CONFIG["settings"]["groupTests"] if "groupTests" in self.CONFIG["settings"] else False
+
         for cl in classes:
-            val = cl.run()
+            val = cl.run(group=groupTests)
             self.tests.extend(val)
         print(self.tests)
 
