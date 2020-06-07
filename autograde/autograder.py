@@ -45,7 +45,7 @@ class Autograder(object):
         for cl in classes:
             val = cl.run(group=groupTests)
             self.tests.extend(val)
-        print(self.tests)
+        # print(self.tests)
 
         # 3 do something with the tests
         self.generate_results(initial_time)

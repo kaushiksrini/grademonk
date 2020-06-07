@@ -62,3 +62,23 @@ class DiffExpectedFileTester(object):
         return ''
 
     # now check whether the files are the same
+
+
+class ReturnValueController(object):
+    def __init__(self, return_value=0, non_zero=False):
+        self.return_value = return_value
+        self.non_zero = non_zero
+
+    def generate_msg(self, test_name, target, out, err, return_code):
+        msg = ''
+        if self.non_zero and return_code == 0:
+            msg += 'FAIL (RETURN CODE) -- "%s" compiled successfully but returned [%d] when run instead of a non-zero value.\n' % (
+                target, return_code)
+        elif self.return_value != return_code:
+            msg += 'FAIL (RETURN CODE) -- "%s" compiled successfully but returned [%d] when run instead of [%d].\n' % (
+                target, return_code, self.return_value)
+
+        if len(msg) > 0:
+            return msg
+
+        return ''

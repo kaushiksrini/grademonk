@@ -73,4 +73,4 @@ class TestRunner(object):
         if len(msg) > 0:
             return msg
 
-        return 'PASS - Test \"%s\" passed successfully' % (self.test_name)
+        return 'PASS - Test \"%s\" passed successfully\n' % (self.test_name)
