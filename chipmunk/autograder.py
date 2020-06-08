@@ -5,6 +5,7 @@ import os
 
 
 class Autograder(object):
+
     def __init__(self, CONFIG=None, autograder=''):
         self.CONFIG = CONFIG
         self.autograder = False
@@ -18,6 +19,10 @@ class Autograder(object):
         time_string = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
         self.state_string = 'Graded %s by autograder v%s on %s' % (
             time_string, self.CONFIG['settings']['version'], platform.node())
+
+    @staticmethod
+    def get_autograder_status():
+        return self.autograder
 
     def create_folders(self):
         folders = self.CONFIG["settings"]["foldersReq"]

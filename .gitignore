@@ -5,6 +5,10 @@ __pycache__/
 
 # autograder dev specific
 submission/
+expected/
+grids/
+input/
+output/
 
 # C extensions
 *.so
