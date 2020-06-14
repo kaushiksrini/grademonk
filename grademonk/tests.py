@@ -3,8 +3,9 @@ import os
 
 
 class TestGroup(object):
-    def __init__(self, group_name, tests, visibility='visible', max_score=0.01, valgrind=False, valgrind_error_code=19):
+    def __init__(self, group_name, tests, target='', visibility='visible', max_score=0.01, valgrind=False, valgrind_error_code=19):
         self.group_name = group_name
+        self.target = target
         self.tests = tests
         self.visibility = visibility
         self.max_score = max_score
@@ -19,6 +20,8 @@ class TestGroup(object):
         valgrind_test = []
 
         for test in self.tests:
+            if not test.target:
+                test.target = self.target
             msg = test.run()
             if not group:
                 score = 0 if msg.startswith('FAIL') else self.max_score
@@ -67,7 +70,7 @@ class TestGroup(object):
 
 
 class TestRunner(object):
-    def __init__(self, target, test_name, arguments, tester, return_value=0, timeout=300):
+    def __init__(self, test_name, arguments, tester, target='', return_value=0, timeout=300):
         self.target = target
         self.test_name = test_name
         self.arguments = arguments
@@ -90,7 +93,6 @@ class TestRunner(object):
 
         msg = ''
         cmd = './%s %s' % (self.target, self.arguments.getArg())
-
         out, err, return_code, isKilled = run_subprocess(
             cmd, timeout=self.timeout)
 

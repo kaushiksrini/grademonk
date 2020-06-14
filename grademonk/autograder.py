@@ -44,10 +44,13 @@ class Autograder(object):
             os.chdir(self.CONFIG["settings"]["locationMount"])
 
         # run each class test
+        defaults = self.CONFIG["test"]["defaults"]
         classes = self.CONFIG["test"]["tests"]
         groupTests = self.CONFIG["settings"]["groupTests"] if "groupTests" in self.CONFIG["settings"] else False
 
         for cl in classes:
+            if not cl.target:
+                cl.target = defaults["target"]
             val = cl.run(group=groupTests)
             self.tests.extend(val)
         # print(self.tests)
