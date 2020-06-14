@@ -7,14 +7,22 @@ class TestController(object):
     def __init__(self):
         pass
 
-    def get_file_diff(self, test_name, file1, file2):
-        expectedLines = open(file1).readlines()
-        outputLines = open(file2).readlines()
+    def get_file_diff(self, test_name, file1, file2, is_bytes=False):
         msg = ''
         diffOut = ''
 
-        for line in difflib.unified_diff(expectedLines, outputLines):
-            diffOut += line
+        if is_bytes:
+            expectedLines = open(file1, "rb").readlines()
+            outputLines = open(file2, "rb").readlines()
+
+            for line in difflib.diff_bytes(difflib.unified_diff, expectedLines, outputLines):
+                diffOut += line
+        else:
+            expectedLines = open(file1).readlines()
+            outputLines = open(file2).readlines()
+
+            for line in difflib.unified_diff(expectedLines, outputLines):
+                diffOut += line
 
         if len(diffOut) > 0:
             msg += ('FAIL -- Test %s has different ouput than expected' %
@@ -49,9 +57,10 @@ class DiffTester(object):
 
 
 class DiffExpectedFileTester(TestController):
-    def __init__(self, file_name='', return_value=0):
+    def __init__(self, file_name='', return_value=0, is_bytes=False):
         self.file_name = file_name
         self.return_value = return_value
+        self.is_bytes = is_bytes
 
     def generate_msg(self, test_name, target, out, err, return_code):
         msg = ''
@@ -60,14 +69,12 @@ class DiffExpectedFileTester(TestController):
                 target, return_code, self.return_value)
 
         msg += self.get_file_diff(test_name, get_file_path(
-            "expected", self.file_name), get_file_path("output", self.file_name))
+            "expected", self.file_name), get_file_path("output", self.file_name), self.is_bytes)
 
         if len(msg) > 0:
             return msg
 
         return ''
-
-    # now check whether the files are the same
 
 
 class ReturnValueController(TestController):
